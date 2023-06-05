@@ -1,0 +1,89 @@
+#include <iostream>
+using namespace std;
+
+class Tacka3D
+{
+public:
+	int x, y, z;
+	Tacka3D(int x=0, int y=0, int z=0)
+	{
+		this->x = x;
+		this->y = y;
+		this->z = z;
+	}
+	friend ostream& operator<<(ostream& cout, Tacka3D& tacka)
+	{
+		cout << "(" << tacka.x << ", " << tacka.y << ", " << tacka.z << ")" << endl;
+		return cout;
+	}
+};
+
+class Cvor
+{
+public:
+	Tacka3D info;
+	Cvor* next;
+	Cvor(Tacka3D info, Cvor* next=nullptr)
+	{
+		this->info = info;
+		this->next = next;
+	}
+};
+
+class PrioritetniRedPov
+{
+	Cvor* prvi = nullptr;
+	int udaljenost(Tacka3D tacka)
+	{
+		return sqrt(pow(0 - tacka.x, 2) + pow(0 - tacka.y, 2) + pow(0 - tacka.z, 2));
+	}
+public:
+	void dodaj(Tacka3D tacka)
+	{
+		Cvor* n = new Cvor(tacka, nullptr);
+		Cvor* t = prvi;
+		Cvor* pt = nullptr;
+		while (t != nullptr)
+		{
+			if (udaljenost(tacka) < udaljenost(t->info))
+				break;
+			pt = t;
+			t = t->next;
+		}
+		if (pt == nullptr)
+		{
+			prvi = n;
+		}
+		else
+			pt->next = n;
+		n->next = t;
+	}
+	void ukloni()
+	{
+		Cvor* t = prvi;
+		prvi = prvi->next;
+		delete t;
+	}
+	void ispis()
+	{
+		Cvor* t = prvi;
+		while (t != nullptr)
+		{
+			cout << t->info << endl;
+			t = t->next;
+		}
+	}
+};
+
+void main() {
+	PrioritetniRedPov pr;
+	pr.dodaj(Tacka3D(1, 2, 3));
+	pr.dodaj(Tacka3D(2, 3, 4));
+	pr.dodaj(Tacka3D(3, 4, 5));
+	pr.dodaj(Tacka3D(4, 5, 6));
+	pr.dodaj(Tacka3D(5, 6, 7));
+	pr.ispis();
+	cout << "-----------------------------" << endl;
+	pr.ukloni();
+	pr.ispis();
+}

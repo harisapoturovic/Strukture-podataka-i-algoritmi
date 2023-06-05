@@ -1,0 +1,31 @@
+Bubble sort 
+Worst and Average Case Time Complexity: O(n*n). Najgori slucaj je kad je niz obrnuto sortiran.
+Best Case Time Complexity: O(n). Najbolji slucaj kad je niz vec sortiran.
+
+Insertion sort
+Time Complexity: O(n*2)
+Najgori slucaj je kad je niz obrnuto sortiran. Najbolji slucaj kad je niz vec sortiran.
+Najbolje ga koristiti kod malih nizova ili kad je niz gotovo pa sortiran.
+
+Selection sort
+Dijeli niz na 2 podniza (sortirani i nesortirani dio)
+Time Complexity: O(n2)   -   ovo je n na kv   -  pow(n,2)
+Pozitivna strana je sto nikada ne radi vise od O(n) zamijena i dobro ga je koristiti kada zelimo ustediti na pisanju u memoriji.
+
+Merge sort
+Time complexity of Merge Sort is O(nLogn) u sve tri slucaja (najbolji, prosjecni, najgori)
+Kao i quick sort to je "Zavadi pa vladaj" algoritam.
+Dijeli niz na vise podnizova
+
+Quick sort
+Time complexity of Quick sort is O(nLogn)
+Kao i merge sort to je "Zavadi pa vladaj" algoritam.
+Uzima pivota (i, j)
+Najgori slucaj je kad se odabere najveci/najmanji element za pivota.
+Najbolji slucaj je kad se odabere srednji element za pivota.
+
+Heap sort
+Time complexity of Heap sort is O(nLogn)
+Podjeca na selection sort jer trazimo najveci element i stavljamo ga na kraj (ponavljamo ovaj proces do kraja).
+Prvo se pravi stablo zatim ide procedura.
+Iako se koristi dosta, quick sort i merge sort su bolji u praksi.

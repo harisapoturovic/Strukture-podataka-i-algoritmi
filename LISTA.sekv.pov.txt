@@ -1,0 +1,195 @@
+#include <iostream>
+using namespace std;
+
+class Datum
+{
+	int dan;
+	int mjesec;
+	int godina;
+public:
+	Datum(){}
+	Datum(int d, int m, int g)
+	{
+		dan = d;
+		mjesec = m;
+		godina = g;
+	}
+	void info() {
+		cout << dan << ". " << mjesec << ". " << godina << ". " << endl;
+	}
+};
+
+class Lista 
+{
+public:
+	virtual void dodaj_na_pocetak(int x) {}
+	virtual void dodaj_na_kraj (int x) {}
+	virtual int ukloni_sa_pocetka() { return 0; }
+	virtual int ukloni_sa_kraja() { return 0; }
+	virtual bool je_li_prazna() { return false; }
+	virtual int operator[](int index) { return 0; }
+	virtual int get_brojac() { return 0; }
+};
+
+class ListaSekv : public Lista     // NIZ (problem je sa dodavanjem i uklanjanjem sa pocetka
+{
+	int brojac = 0;
+	int max = 100;
+	int* N = new int[max];
+	void prosiri_niz()
+	{
+		int* temp = new int[max * 2];
+		for (int i = 0; i < brojac; i++)
+			temp[i] = N[i];
+		max = max * 2;
+		delete[]N;
+		N = temp;
+	}
+public:
+	void dodaj_na_pocetak(int x) 
+	{
+		if (brojac == max)
+			prosiri_niz();
+		for (int i = brojac; i >= 1; i--)
+			N[i] = N[i - 1];
+		N[0] = x;
+		brojac++;
+	}
+	void dodaj_na_kraj(int x)
+	{
+		if (brojac == max)
+			prosiri_niz();
+		N[brojac] = x;
+		brojac++;
+	}
+	int ukloni_sa_pocetka()
+	{
+		if (brojac == 0)
+			throw exception("Niz je prazan");
+		int prvi = N[0];
+		for (int i = 0; i < brojac; i++)
+			N[i] = N[i + 1];
+		brojac--;
+		return prvi;
+	}
+	int ukloni_sa_kraja()
+	{
+		if (brojac == 0)
+			throw exception("Niz je prazan");
+		int zadnji = N[brojac - 1];
+		brojac--;
+		return zadnji;
+	}
+	bool jel_prazan() {
+		return brojac == 0;
+	}
+	int operator[](int index)
+	{
+		return N[index];
+	}
+	int get_brojac() {
+		return brojac;
+	}
+};
+
+typedef int Tip;
+//template<class Tip>
+struct Cvor
+{
+	Cvor* next;
+	Tip info;
+	Cvor() {}
+	Cvor(Tip Info, Cvor* Next)
+	{
+		info = Info;
+		next = Next;
+	}
+};
+
+class ListaPov : public Lista    // cvorovi (problem je dodavanje i uklanjanje sa kraja)
+{
+	Cvor* prvi = nullptr;
+	int brojac = 0;
+public:
+	void dodaj_na_pocetak(int x)
+	{
+		Cvor* n = new Cvor(x, prvi);   //poziv ctora za Cvor
+		prvi = n;
+		brojac++;
+	}
+	int ukloni_sa_pocetka()
+	{
+		brojac--;
+		int x = prvi->info;
+		Cvor* t = prvi;
+		prvi = prvi->next;
+		delete t;
+		return x;
+	}
+	void dodaj_na_kraj(int x)
+	{
+		if (prvi == nullptr)
+		{
+			//throw exception("Lista je prazna");
+			prvi = new Cvor();
+			return;
+		}
+		Cvor* t = prvi;
+		for (int i = 0; i < brojac - 1; i++)
+			t = t->next;
+		Cvor* n = new Cvor(x, nullptr);
+		t->next = n;
+	}
+	int ukloni_sa_kraja()
+	{
+		if (jel_prazan())
+			throw exception("Lista je prazna");
+		Cvor* temp = nullptr;
+		Cvor* t = prvi;
+		for (int i = 0; i < brojac-1; i++)
+		{
+			temp = t;
+			t = t->next;
+		}
+		if (temp != nullptr)
+		{
+			//ako lista ima više od jednog elementa
+			temp->next = nullptr;
+		}
+		else
+		{
+			//ako lista ima jedan elementa
+			prvi = nullptr;
+		}
+		 int x = t->info;
+		delete t;
+		return x;
+	}
+	bool jel_prazan() {
+		return prvi == nullptr;
+	}
+};
+
+
+
+void main() 
+{
+	ListaSekv ls;
+	ListaPov lp;
+	//for (int i = 0; i < 5; i++)
+	//{
+	//	cout << "uklonjeno sa kraja " << lp.ukloni_sa_kraja() << endl;
+	//}
+	for (int i = 0; i < 3; i++)
+	{
+		lp.dodaj_na_kraj(i);
+	}
+	for (int i = 0; i < 2; ++i)
+	{
+		cout << "uklonjeno sa pocetka: " << lp.ukloni_sa_pocetka() << endl;
+	}
+	for (int i = 0; i < 10; ++i)
+	{
+		lp.dodaj_na_pocetak(i);
+	}
+}

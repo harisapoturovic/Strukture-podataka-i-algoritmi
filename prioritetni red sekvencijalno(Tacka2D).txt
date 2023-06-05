@@ -1,0 +1,81 @@
+#include<iostream>
+using namespace std;
+
+class Tacka2D
+{
+public:
+	int x, y;
+	Tacka2D(int x = 0, int y = 0)
+	{
+		this->x = x;
+		this->y = y;
+	}
+	friend ostream& operator<<(ostream& cout, Tacka2D& tacka)
+	{
+		cout << "(" << tacka.x << ", " << tacka.y << ")" << endl;
+		return cout;
+	}
+};
+class PrioritetniRedSekv
+{
+	int max;
+	int brojac = 0;
+	Tacka2D* niz;
+	int udaljenost(Tacka2D& tacka)
+	{
+		return sqrt(pow(5 - tacka.x, 2) + pow(5 - tacka.y, 2));
+	}
+public:
+	PrioritetniRedSekv(int max = 10)
+	{
+		this->max = max;
+		niz = new Tacka2D[max];
+	}
+	void dodaj(Tacka2D tacka)
+	{
+		if (brojac == max)
+			throw exception("Red je pun");
+		niz[brojac] = tacka;
+		brojac++;
+	}
+	void ukloni()
+	{
+		if (brojac == 0)
+			throw exception("Red je prazan");
+		int nizI = 0;
+		int nizV = udaljenost(niz[0]); // udaljenost prve tacke u redu
+		for (int i = 1; i < brojac; i++) // prolazimo kroz cijeli red
+		{
+			if (udaljenost(niz[i]) < nizV)
+			{
+				nizI = i; // uzimamo poziciju te tacke koja je bliza tacki (5,5)
+				nizV = udaljenost(niz[i]); // uzimamo vrijednost te iste tacke
+			}
+		}
+		brojac--;
+		niz[nizI] = niz[brojac]; // na mjesto gdje je bila tacka sa najmanjom udaljenoscu, postavlja zadnju tacku
+	}
+	void ispis()
+	{
+		for (int i = 0; i < brojac; i++)
+		{
+			cout << niz[i];
+		}
+		cout << endl;
+	}
+};
+
+
+
+int main() {
+	PrioritetniRedSekv pr;
+	pr.dodaj(Tacka2D(8, 2));
+	pr.dodaj(Tacka2D(3, 9));
+	pr.dodaj(Tacka2D(5, 7));
+	pr.dodaj(Tacka2D(15, 1));
+	cout << "\n------------------------------------------------------------\n";
+	pr.ispis();
+	cout << "\n------------------------------------------------------------\n";
+	pr.ukloni();
+	pr.ispis();
+}

@@ -1,0 +1,93 @@
+#include <iostream>
+using namespace std;
+
+
+class Tacka2D 
+{
+public:
+	int x, y;
+	Tacka2D(int x=0, int y=0)
+	{
+		this->x = x;
+		this->y = y;
+	}
+	friend ostream& operator <<(ostream& cout, Tacka2D& tacka) {
+		cout << "(" << tacka.x << "," << tacka.y << ")" << endl;
+		return cout;
+	}
+};
+
+typedef Tacka2D Tip;
+
+class Cvor
+{
+public:
+	Tip info;
+	Cvor* next;
+	Cvor(Tip info, Cvor*next=nullptr)
+	{
+		this->info = info;
+		this->next = next;
+	}
+};
+
+class PrioritetniRedPov
+{
+	Cvor* prvi = nullptr;
+	int udaljenost(Tip tacka) {
+		return sqrt(pow(10 - tacka.x, 2) - pow(-5 - tacka.y, 2));
+	}
+public:
+	void dodaj(Tip tacka) {
+		Cvor* n = new Cvor(tacka, nullptr);
+		Cvor* t = prvi;
+		Cvor* pt = nullptr;
+		while (t != nullptr)
+		{
+			if(udaljenost(t->info)>udaljenost(tacka)) // jel tacka udaljenija u odnosu na prvu, ako nije idemo dalje, ako jeste zaustavljamo se
+				break;
+			pt = t;
+			t = t->next;
+		}
+		//novi n ubacujemo izmedju pt i t
+		if (pt == nullptr) // slucaj kada pt pokazuje na prvi(pokazivac), a t na prvi cvor
+			prvi = n; // dodajemo novi na prvu poziciju jer je najveci broj
+		else
+			pt->next = n;
+		n->next = t; //pt->next->next=t
+	}
+	Tip ukloni()
+	{
+		Cvor* t = prvi;
+		prvi = prvi->next;
+		Tip x = t->info;
+		delete t;
+		return x;
+	}
+	void ispis() {
+		Cvor* t = prvi;
+		while (t != nullptr) {
+			cout << t->info << endl;
+			t = t->next;
+		}
+	}
+};
+
+
+
+int main() {
+	Tacka2D tacka1(1, 2);
+	Tacka2D tacka2(2, 3);
+	Tacka2D tacka3(3, 4);
+	Tacka2D tacka4(4, 5);
+	Tacka2D tacka5(5, 6);
+	PrioritetniRedPov red;
+	red.dodaj(tacka1);
+	red.dodaj(tacka2);
+	red.dodaj(tacka3);
+	red.dodaj(tacka4);
+	red.dodaj(tacka5);
+	red.ispis();
+	Tacka2D uklonjena = red.ukloni();
+	cout << "Uklonjena tacka " << uklonjena << endl;
+}
